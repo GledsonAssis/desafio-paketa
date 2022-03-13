@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mongo:  
+    image: mongo:5.0
+    restart: always
+    container_name: menu-db
+    logging:
+      driver: none
+    ports:
+      - 27017:27017
+
+  app:
+    restart: always
+    build: .
+    depends_on:
+      - mongo
+    container_name: menu-api
+    ports:
+      - 8000:8000
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/local
+      - HOST=http://localhost
+      - PORT=8000
+      - VERSION=v1
+    links:
+      - mongo
